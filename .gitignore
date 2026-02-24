@@ -1,0 +1,4 @@
+venv311/
+ffmpeg.exe
+.env
+__pycache__/
