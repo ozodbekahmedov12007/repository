@@ -1,0 +1,17 @@
+# Groq ning eski versiyasi
+groq==0.4.2
+
+# Boshqa paketlar
+flask==3.0.0
+flask-cors==4.0.0
+yt-dlp
+schedule
+edge-tts==6.1.15
+httpx  # Yangi qo'shimcha
+python-dotenv
+gunicorn
+
+# Google API
+google-auth-oauthlib
+google-auth-httplib2
+google-api-python-client

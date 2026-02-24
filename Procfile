@@ -1,0 +1,1 @@
+web: gunicorn youtube_shorts_bot:app

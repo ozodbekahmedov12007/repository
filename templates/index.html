@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>PUBG Premium Bot</title>
+    <style>
+        body{background:#1a1a2e;color:#fff;font-family:Arial;padding:20px}
+        .container{max-width:800px;margin:0 auto;background:#16213e;padding:30px;border-radius:20px}
+        h1{color:gold;text-align:center}
+        .premium-badge{background:linear-gradient(135deg,#667eea,#764ba2);padding:5px 15px;border-radius:20px;display:inline-block;margin-bottom:15px}
+        button{padding:10px 20px;margin:5px;border:none;border-radius:5px;cursor:pointer}
+        .mode-auto{background:#ffab00}
+        .mode-manual{background:#00d25b;color:#fff}
+        .active{border:3px solid #fff}
+        .run-btn{background:#667eea;color:#fff;font-size:20px;padding:15px;width:100%}
+        .status{background:#0f3460;padding:20px;border-radius:10px;margin:20px 0}
+        .topic{background:#1a1a2e;padding:10px;border-left:4px solid gold;margin:10px 0}
+        .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:20px 0}
+        .stat{background:#0f3460;padding:10px;text-align:center}
+        .number{font-size:24px;color:gold}
+        .logs{background:#0f3460;padding:10px;max-height:200px;overflow-y:auto}
+        .log{padding:3px;border-bottom:1px solid #333;font-family:monospace}
+        .steps{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin:10px 0;font-size:12px}
+        .step{background:#1a1a2e;padding:5px;border-radius:5px;text-align:center}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 PUBG Premium Bot</h1>
+        <div class="premium-badge">✨ REAL PUBG GAMEPLAY ✨</div>
+
+        <div class="steps">
+            <div class="step">1️⃣ AI Mavzu</div>
+            <div class="step">2️⃣ Real Video</div>
+            <div class="step">3️⃣ PUBG Effektlar</div>
+            <div class="step">4️⃣ Matn + Ovoz</div>
+            <div class="step">5️⃣ YouTube</div>
+        </div>
+
+        <div>
+            <button class="mode-auto active" id="autoBtn" onclick="setMode('auto')">⏰ Avto</button>
+            <button class="mode-manual" id="manualBtn" onclick="setMode('manual')">🖱️ Qo'lda</button>
+        </div>
+
+        <button class="run-btn" onclick="runBot()" id="runBtn">🎬 VIDEO YARATISH</button>
+
+        <div class="status">
+            <div id="statusMsg">Bot ishga tayyor</div>
+            <div class="topic" id="topicBox">Mavzu: --</div>
+        </div>
+
+        <div class="stats">
+            <div class="stat"><div class="number" id="total">0</div>Jami</div>
+            <div class="stat"><div class="number" id="topics">0</div>Mavzu</div>
+            <div class="stat"><div class="number" id="last">--:--</div>Oxirgi</div>
+            <div class="stat"><div class="number" id="next">09:00</div>Keyingi</div>
+            <div class="stat"><div class="number" id="queue">0</div>Navbat</div>
+        </div>
+
+        <div id="videoLink"></div>
+
+        <h3>📋 Jarayon loglari</h3>
+        <div class="logs" id="logs"></div>
+    </div>
+
+    <script>
+        function update(){
+            fetch('/api/status').then(r=>r.json()).then(d=>{
+                document.getElementById('statusMsg').innerHTML=d.message
+                if(d.current_topic) document.getElementById('topicBox').innerHTML='Mavzu: '+d.current_topic
+                document.getElementById('total').innerHTML=d.total_videos
+                document.getElementById('topics').innerHTML=d.topics_generated
+                document.getElementById('last').innerHTML=d.last_run||'--:--'
+                document.getElementById('next').innerHTML=d.next_run||'09:00'
+                document.getElementById('queue').innerHTML=d.queue_size
+
+                let auto=document.getElementById('autoBtn')
+                let manual=document.getElementById('manualBtn')
+                if(d.mode=='auto'){auto.classList.add('active');manual.classList.remove('active')}
+                else{manual.classList.add('active');auto.classList.remove('active')}
+
+                document.getElementById('runBtn').disabled=(d.status=='working')
+                if(d.logs) document.getElementById('logs').innerHTML=d.logs.map(l=>'<div class="log">'+l+'</div>').join('')
+            })
+        }
+        function setMode(m){fetch('/api/mode/'+m,{method:'POST'}).then(()=>update())}
+        function runBot(){fetch('/api/run',{method:'POST'})}
+        setInterval(update,2000)
+        update()
+    </script>
+</body>
+</html>

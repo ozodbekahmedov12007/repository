@@ -1,0 +1,11 @@
+
+# render.yaml
+services:
+  - type: web
+    name: pubg-bot
+    env: python
+    buildCommand: |
+      apt-get update
+      apt-get install -y ffmpeg
+      pip install -r requirements.txt
+    startCommand: gunicorn app:app
